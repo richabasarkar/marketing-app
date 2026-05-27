@@ -9,11 +9,12 @@ import PlanSection from '@/components/PlanSection';
 import ProjectBoard from '@/components/ProjectBoard';
 import ChatBot from '@/components/ChatBot';
 import Sidebar from '@/components/Sidebar';
+import HomePage from '@/components/HomePage';
 
-type AppStep = 'inputs' | 'strategies' | 'followup' | 'plan' | 'board';
+type AppStep = 'home' | 'inputs' | 'strategies' | 'followup' | 'plan' | 'board';
 
 export default function Home() {
-  const [currentStep, setCurrentStep] = useState<AppStep>('inputs');
+  const [currentStep, setCurrentStep] = useState<AppStep>('home');
   const [inputs, setInputs] = useState<Partial<CompanyInputs>>({ currentChannels: [], targetAgeRange: [], inHouseCapabilities: [] });
   const [strategies, setStrategies] = useState<MarketingStrategy[]>([]);
   const [selectedStrategy, setSelectedStrategy] = useState<MarketingStrategy | null>(null);
@@ -26,11 +27,11 @@ export default function Home() {
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const [error, setError] = useState('');
 
-  const steps: AppStep[] = ['inputs', 'strategies', 'followup', 'plan', 'board'];
-  const stepLabels: Record<AppStep, string> = { inputs: 'Company Profile', strategies: 'Your Strategies', followup: 'Plan Details', plan: 'Marketing Plan', board: 'Action Board' };
-  const stepNumbers: Record<AppStep, number> = { inputs: 0, strategies: 1, followup: 2, plan: 3, board: 4 };
+  const steps: Exclude<AppStep, 'home'>[] = ['inputs', 'strategies', 'followup', 'plan', 'board'];
+  const stepLabels: Record<Exclude<AppStep, 'home'>, string> = { inputs: 'Company Profile', strategies: 'Your Strategies', followup: 'Plan Details', plan: 'Marketing Plan', board: 'Action Board' };
+  const stepNumbers: Record<Exclude<AppStep, 'home'>, number> = { inputs: 0, strategies: 1, followup: 2, plan: 3, board: 4 };
 
-  const canNavigateTo = (step: AppStep): boolean => {
+  const canNavigateTo = (step: Exclude<AppStep, 'home'>): boolean => {
     if (step === 'inputs') return true;
     if (step === 'strategies') return strategies.length > 0;
     if (step === 'followup') return !!selectedStrategy;
@@ -50,7 +51,7 @@ export default function Home() {
       const data = await res.json();
       setStrategies(data.strategies);
       setCurrentStep('strategies');
-    } catch (e) { setError('Failed to generate strategies. Please check your API key and try again.'); }
+    } catch { setError('Failed to generate strategies. Please check your API key and try again.'); }
     finally { setIsLoading(false); }
   };
 
@@ -69,25 +70,42 @@ export default function Home() {
       data.plan.phases?.forEach((phase: { actionItems?: ActionItem[] }) => { if (phase.actionItems) items.push(...phase.actionItems); });
       setAllActionItems(items);
       setCurrentStep('plan');
-    } catch (e) { setError('Failed to generate plan. Please try again.'); }
+    } catch { setError('Failed to generate plan. Please try again.'); }
     finally { setIsLoading(false); }
   };
 
-  const chatContext = { companyName: inputs.companyName, industry: inputs.industry, businessType: inputs.businessType, companyStage: inputs.companyStage, marketingBudgetMonthly: inputs.marketingBudgetMonthly, primaryGoal: inputs.primaryGoal, targetPainPoints: inputs.targetPainPoints, selectedStrategy: selectedStrategy?.name, currentPhase: currentStep };
+  const chatContext = {
+    companyName: inputs.companyName, industry: inputs.industry,
+    businessType: inputs.businessType, companyStage: inputs.companyStage,
+    marketingBudgetMonthly: inputs.marketingBudgetMonthly, primaryGoal: inputs.primaryGoal,
+    targetPainPoints: inputs.targetPainPoints, selectedStrategy: selectedStrategy?.name,
+    currentPhase: currentStep,
+  };
+
+  if (currentStep === 'home') {
+    return <HomePage onGetStarted={() => setCurrentStep('inputs')} />;
+  }
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', position: 'relative' }}>
-      <div className="gradient-orb" style={{ width: 600, height: 600, background: 'radial-gradient(circle, rgba(108,99,255,0.12) 0%, transparent 70%)', top: -200, left: -200 }} />
-      <div className="gradient-orb" style={{ width: 400, height: 400, background: 'radial-gradient(circle, rgba(255,101,132,0.08) 0%, transparent 70%)', top: 400, right: -100 }} />
+    <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--bg)', position: 'relative' }}>
+      <Sidebar
+        currentStep={currentStep as Exclude<AppStep, 'home'>}
+        onStepClick={(step) => { if (canNavigateTo(step)) setCurrentStep(step); }}
+        canNavigateTo={canNavigateTo}
+        steps={steps}
+        stepLabels={stepLabels}
+        stepNumbers={stepNumbers}
+        companyName={inputs.companyName}
+        selectedStrategy={selectedStrategy?.name}
+        onLogoClick={() => setCurrentStep('home')}
+      />
 
-      <Sidebar currentStep={currentStep} onStepClick={(step: AppStep) => { if (canNavigateTo(step)) setCurrentStep(step); }} canNavigateTo={canNavigateTo} steps={steps} stepLabels={stepLabels} stepNumbers={stepNumbers} companyName={inputs.companyName} selectedStrategy={selectedStrategy?.name} />
-
-      <main style={{ flex: 1, marginLeft: 260, padding: '32px 40px', maxWidth: 'calc(100vw - 260px)', position: 'relative', zIndex: 1 }}>
+      <main style={{ flex: 1, marginLeft: 268, padding: '36px 48px', maxWidth: 'calc(100vw - 268px)', position: 'relative', zIndex: 1, minHeight: '100vh' }}>
         {isLoading && (
-          <div style={{ position: 'fixed', inset: 0, background: 'rgba(10,10,15,0.85)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', zIndex: 1000, backdropFilter: 'blur(8px)' }}>
-            <div style={{ textAlign: 'center' }}>
+          <div style={{ position: 'fixed', inset: 0, background: 'rgba(248,247,255,0.92)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', zIndex: 1000, backdropFilter: 'blur(8px)' }}>
+            <div style={{ textAlign: 'center', padding: 40 }}>
               <div style={{ width: 64, height: 64, borderRadius: '50%', border: '3px solid var(--border)', borderTopColor: 'var(--accent)', animation: 'spin 1s linear infinite', margin: '0 auto 24px' }} />
-              <h3 style={{ fontFamily: 'Bricolage Grotesque', fontSize: 22, marginBottom: 8 }}>{loadingMessage}</h3>
+              <h3 style={{ fontFamily: 'Bricolage Grotesque', fontSize: 22, marginBottom: 8, color: 'var(--text)' }}>{loadingMessage}</h3>
               <p style={{ color: 'var(--text-3)', fontSize: 14 }}>Our AI is crafting personalized insights just for you</p>
               <div style={{ marginTop: 20 }} className="loading-dots"><span /><span /><span /></div>
             </div>
@@ -95,9 +113,9 @@ export default function Home() {
         )}
 
         {error && (
-          <div style={{ background: 'rgba(255,101,132,0.1)', border: '1px solid rgba(255,101,132,0.3)', borderRadius: 10, padding: '12px 16px', marginBottom: 24, color: '#ff91a8', display: 'flex', alignItems: 'center', gap: 10 }}>
+          <div style={{ background: 'rgba(255,101,132,0.06)', border: '1px solid rgba(255,101,132,0.25)', borderRadius: 10, padding: '12px 16px', marginBottom: 24, color: '#e0365a', display: 'flex', alignItems: 'center', gap: 10 }}>
             <span>⚠</span><span style={{ fontSize: 14 }}>{error}</span>
-            <button onClick={() => setError('')} style={{ marginLeft: 'auto', background: 'none', border: 'none', color: '#ff91a8', cursor: 'pointer', fontSize: 18 }}>×</button>
+            <button onClick={() => setError('')} style={{ marginLeft: 'auto', background: 'none', border: 'none', color: '#e0365a', cursor: 'pointer', fontSize: 18 }}>×</button>
           </div>
         )}
 
