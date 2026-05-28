@@ -12,7 +12,7 @@ const FEATURES = [
   { number: '02', title: '5 AI-Tailored Strategies', description: 'Get five marketing strategies built specifically for your company — with two highlighted as top picks.' },
   { number: '03', title: 'Full 12-Week Roadmap', description: 'A phase-by-phase plan with KPIs, budget breakdowns, messaging frameworks, and risk mitigation.' },
   { number: '04', title: 'Week-by-Week Action Board', description: 'Every strategy broken into tasks you can check off. Filter by priority, phase, or category.' },
-  { number: '05', title: 'AI Strategist On-Demand', description: 'Marcus, your AI marketing expert, answers questions and gives tailored advice throughout your journey.' },
+  { number: '05', title: 'AI Strategist On-Demand', description: 'Chip, your AI marketing expert, answers questions and gives tailored advice throughout your journey.' },
   { number: '06', title: 'Built-In KPI Tracking', description: 'Know exactly what to measure and when. Every phase comes with specific metrics and tracking methods.' },
 ];
 

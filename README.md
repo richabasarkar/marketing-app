@@ -8,7 +8,7 @@ A full-stack AI-powered marketing strategy app built with Next.js, TypeScript, a
 - **AI Strategy Generator** — 5 custom strategies ranked by fit, with 2 top picks highlighted
 - **Plan Builder** — Full 12-week marketing plan with phases, KPIs, budget breakdowns, and messaging frameworks
 - **Action Board** — Asana-style project management with week/phase/priority/category views
-- **Marcus AI Chatbot** — Context-aware marketing expert available throughout the entire journey
+- **Chip AI Chatbot** — Context-aware marketing expert available throughout the entire journey
 
 ## Setup
 

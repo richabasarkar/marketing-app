@@ -1,7 +1,7 @@
 'use client';
 
 import { MarketingStrategy } from '@/types';
-import { Rocket, Target, Megaphone, Users, TrendingUp, Star, Zap, Heart, Globe, Mail, CheckCircle, Clock, DollarSign, BarChart3, ThumbsUp, ChevronRight } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 
 interface Props {
   strategies: MarketingStrategy[];
@@ -10,151 +10,152 @@ interface Props {
   onContinue: () => void;
 }
 
-const iconMap: Record<string, React.ReactNode> = {
-  rocket: <Rocket size={22} />,
-  target: <Target size={22} />,
-  megaphone: <Megaphone size={22} />,
-  users: <Users size={22} />,
-  'trending-up': <TrendingUp size={22} />,
-  star: <Star size={22} />,
-  zap: <Zap size={22} />,
-  heart: <Heart size={22} />,
-  globe: <Globe size={22} />,
-  mail: <Mail size={22} />,
+const effortColors: Record<string, { bg: string; text: string }> = {
+  Low:    { bg: 'rgba(34,197,94,0.1)',   text: '#16a34a' },
+  Medium: { bg: 'rgba(245,158,11,0.1)',  text: '#d97706' },
+  High:   { bg: 'rgba(239,68,68,0.1)',   text: '#dc2626' },
 };
 
-const colorMap: Record<string, { bg: string; border: string; text: string; glow: string }> = {
-  purple: { bg: 'rgba(108,99,255,0.12)', border: 'rgba(108,99,255,0.4)', text: '#a89cff', glow: 'rgba(108,99,255,0.2)' },
-  pink: { bg: 'rgba(255,101,132,0.12)', border: 'rgba(255,101,132,0.4)', text: '#ff91a8', glow: 'rgba(255,101,132,0.15)' },
-  green: { bg: 'rgba(67,233,123,0.12)', border: 'rgba(67,233,123,0.4)', text: '#43e97b', glow: 'rgba(67,233,123,0.15)' },
-  yellow: { bg: 'rgba(248,169,53,0.12)', border: 'rgba(248,169,53,0.4)', text: '#f8a935', glow: 'rgba(248,169,53,0.15)' },
-  blue: { bg: 'rgba(56,182,255,0.12)', border: 'rgba(56,182,255,0.4)', text: '#56b6ff', glow: 'rgba(56,182,255,0.15)' },
-  orange: { bg: 'rgba(255,127,61,0.12)', border: 'rgba(255,127,61,0.4)', text: '#ff7f3d', glow: 'rgba(255,127,61,0.15)' },
+const accentColors: Record<string, { border: string; tag: string; tagText: string; left: string }> = {
+  purple: { border: '#6c63ff', tag: '#ede9ff', tagText: '#6c63ff', left: '#6c63ff' },
+  pink:   { border: '#f472b6', tag: '#fdf2f8', tagText: '#be185d', left: '#f472b6' },
+  green:  { border: '#22c55e', tag: '#f0fdf4', tagText: '#15803d', left: '#22c55e' },
+  yellow: { border: '#f59e0b', tag: '#fffbeb', tagText: '#b45309', left: '#f59e0b' },
+  blue:   { border: '#3b82f6', tag: '#eff6ff', tagText: '#1d4ed8', left: '#3b82f6' },
+  orange: { border: '#f97316', tag: '#fff7ed', tagText: '#c2410c', left: '#f97316' },
 };
 
-const effortColors = { Low: '#43e97b', Medium: '#f8a935', High: '#ff91a8' };
-
-function StrategyCard({ strategy, isSelected, onSelect }: { strategy: MarketingStrategy; isSelected: boolean; onSelect: () => void }) {
-  const colors = colorMap[strategy.color] || colorMap.purple;
-  const icon = iconMap[strategy.icon] || <Target size={22} />;
+function StrategyCard({ strategy, isSelected, onSelect, index }: { strategy: MarketingStrategy; isSelected: boolean; onSelect: () => void; index: number }) {
+  const colors = accentColors[strategy.color] || accentColors.purple;
+  const effort = effortColors[strategy.effortLevel] || effortColors.Medium;
 
   return (
     <div
       onClick={onSelect}
       style={{
-        background: isSelected ? 'var(--surface-2)' : 'var(--surface)',
-        border: `2px solid ${isSelected ? colors.border : strategy.isRecommended ? 'rgba(67,233,123,0.35)' : 'var(--border)'}`,
-        borderRadius: 20, padding: 24, cursor: 'pointer',
-        transition: 'all 0.25s', position: 'relative', overflow: 'hidden',
-        boxShadow: isSelected ? `0 0 30px ${colors.glow}` : 'none',
-        transform: isSelected ? 'translateY(-2px)' : 'none',
-        animation: 'fadeIn 0.4s ease forwards',
+        background: 'white',
+        border: `1.5px solid ${isSelected ? colors.border : '#e4e2f5'}`,
+        borderLeft: `4px solid ${isSelected ? colors.border : '#e4e2f5'}`,
+        padding: 0,
+        cursor: 'pointer',
+        transition: 'all 0.2s',
+        position: 'relative',
+        boxShadow: isSelected ? `0 4px 24px rgba(108,99,255,0.12)` : '0 1px 4px rgba(0,0,0,0.04)',
+        marginBottom: 0,
       }}
     >
-      {/* Top gradient bar */}
-      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: `linear-gradient(90deg, ${colors.text}, transparent)`, opacity: isSelected ? 1 : 0.4, transition: 'opacity 0.2s' }} />
-
-      {/* Recommended badge */}
-      {strategy.isRecommended && (
-        <div style={{ position: 'absolute', top: 14, right: 14 }}>
-          <span className="badge badge-green" style={{ fontSize: 11 }}>
-            <Star size={10} fill="currentColor" /> Top Pick
-          </span>
-        </div>
-      )}
-
-      {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 14, marginBottom: 16 }}>
-        <div style={{
-          width: 48, height: 48, borderRadius: 14, flexShrink: 0,
-          background: colors.bg, border: `1px solid ${colors.border}`,
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          color: colors.text,
-        }}>
-          {icon}
-        </div>
-        <div style={{ flex: 1, paddingRight: strategy.isRecommended ? 80 : 0 }}>
-          <h3 style={{ fontFamily: 'Bricolage Grotesque', fontWeight: 800, fontSize: 18, marginBottom: 3, lineHeight: 1.2 }}>
-            {strategy.name}
-          </h3>
-          <p style={{ color: colors.text, fontSize: 13, fontWeight: 500 }}>{strategy.tagline}</p>
+      {/* Top bar — index + recommended badge */}
+      <div style={{ padding: '16px 24px 0', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <span style={{ fontFamily: 'Bricolage Grotesque', fontWeight: 800, fontSize: 12, color: '#d4d0f0', letterSpacing: '0.04em' }}>
+          {String(index + 1).padStart(2, '0')}
+        </span>
+        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+          {strategy.isRecommended && (
+            <span style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#16a34a', background: '#f0fdf4', border: '1px solid #bbf7d0', padding: '3px 10px' }}>
+              Recommended
+            </span>
+          )}
+          {isSelected && (
+            <span style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: colors.tagText, background: colors.tag, border: `1px solid ${colors.border}`, padding: '3px 10px' }}>
+              Selected
+            </span>
+          )}
         </div>
       </div>
 
-      {/* Description */}
-      <p style={{ color: 'var(--text-2)', fontSize: 14, lineHeight: 1.65, marginBottom: 16 }}>
-        {strategy.description}
-      </p>
+      {/* Main content */}
+      <div style={{ padding: '14px 24px 20px' }}>
+        {/* Title + tagline */}
+        <h3 style={{ fontFamily: 'Bricolage Grotesque', fontWeight: 800, fontSize: 20, marginBottom: 4, color: '#1a1730', lineHeight: 1.2 }}>
+          {strategy.name}
+        </h3>
+        <p style={{ fontSize: 13, color: '#6c63ff', fontWeight: 600, marginBottom: 12 }}>{strategy.tagline}</p>
 
-      {/* Why it fits */}
-      {strategy.whyItFitsYou && (
-        <div style={{ background: 'var(--surface-2)', borderRadius: 10, padding: '10px 14px', marginBottom: 16, borderLeft: `3px solid ${colors.text}` }}>
-          <p style={{ fontSize: 12, color: 'var(--text-2)', lineHeight: 1.5 }}>
-            <strong style={{ color: colors.text }}>Why this fits you: </strong>{strategy.whyItFitsYou}
-          </p>
-        </div>
-      )}
+        {/* Description */}
+        <p style={{ fontSize: 14, color: '#4a4568', lineHeight: 1.7, marginBottom: 16 }}>
+          {strategy.description}
+        </p>
 
-      {/* Recommendation reason */}
-      {strategy.isRecommended && strategy.recommendationReason && (
-        <div style={{ background: 'rgba(67,233,123,0.08)', border: '1px solid rgba(67,233,123,0.25)', borderRadius: 10, padding: '10px 14px', marginBottom: 16 }}>
-          <p style={{ fontSize: 12, color: '#43e97b', lineHeight: 1.5 }}>
-            <strong>⭐ AI Recommendation: </strong>{strategy.recommendationReason}
-          </p>
-        </div>
-      )}
-
-      {/* Stats row */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: 8, marginBottom: 16 }}>
-        {[
-          { icon: <Clock size={12} />, label: 'Time to Results', value: strategy.estimatedTimeToResults },
-          { icon: <DollarSign size={12} />, label: 'Cost Range', value: strategy.estimatedCostRange },
-          { icon: <BarChart3 size={12} />, label: 'Effort', value: strategy.effortLevel, color: effortColors[strategy.effortLevel] },
-          { icon: <TrendingUp size={12} />, label: 'Potential ROI', value: strategy.potentialROI },
-        ].map((stat, i) => (
-          <div key={i} style={{ background: 'var(--surface-2)', borderRadius: 8, padding: '8px 10px', border: '1px solid var(--border)' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 4, color: 'var(--text-3)', marginBottom: 3 }}>
-              {stat.icon}<span style={{ fontSize: 10, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{stat.label}</span>
+        {/* Stats row — clean table style */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', borderTop: '1px solid #f3f2ff', borderLeft: '1px solid #f3f2ff', marginBottom: 16 }}>
+          {[
+            { label: 'Time to Results', value: strategy.estimatedTimeToResults },
+            { label: 'Cost Range',      value: strategy.estimatedCostRange },
+            { label: 'Potential ROI',   value: strategy.potentialROI },
+            { label: 'Effort',          value: strategy.effortLevel, effortColor: effort },
+          ].map((stat, i) => (
+            <div key={i} style={{ padding: '10px 14px', borderRight: '1px solid #f3f2ff', borderBottom: '1px solid #f3f2ff' }}>
+              <div style={{ fontSize: 10, color: '#8b87a8', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 4 }}>{stat.label}</div>
+              <div style={{
+                fontSize: 12, fontWeight: 700, fontFamily: 'Bricolage Grotesque',
+                color: stat.effortColor ? stat.effortColor.text : '#1a1730',
+                background: stat.effortColor ? stat.effortColor.bg : 'transparent',
+                display: stat.effortColor ? 'inline-block' : 'block',
+                padding: stat.effortColor ? '1px 8px' : '0',
+              }}>
+                {stat.value}
+              </div>
             </div>
-            <div style={{ fontSize: 12, fontWeight: 700, color: stat.color || 'var(--text)', fontFamily: 'Bricolage Grotesque' }}>{stat.value}</div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
 
-      {/* Channels */}
-      {strategy.channels?.length > 0 && (
-        <div style={{ marginBottom: 14 }}>
-          <p style={{ fontSize: 11, color: 'var(--text-3)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>Channels</p>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-            {strategy.channels.map(ch => (
-              <span key={ch} style={{ padding: '4px 10px', borderRadius: 20, fontSize: 11, fontWeight: 600, background: colors.bg, color: colors.text, border: `1px solid ${colors.border}` }}>{ch}</span>
+        {/* Two column — why it fits + recommendation */}
+        <div style={{ display: 'grid', gridTemplateColumns: strategy.isRecommended && strategy.recommendationReason ? '1fr 1fr' : '1fr', gap: 12, marginBottom: 16 }}>
+          {strategy.whyItFitsYou && (
+            <div style={{ background: '#f8f7ff', borderLeft: `3px solid ${colors.border}`, padding: '10px 14px' }}>
+              <div style={{ fontSize: 10, color: colors.tagText, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 4 }}>Why this fits you</div>
+              <p style={{ fontSize: 12, color: '#4a4568', lineHeight: 1.6 }}>{strategy.whyItFitsYou}</p>
+            </div>
+          )}
+          {strategy.isRecommended && strategy.recommendationReason && (
+            <div style={{ background: '#f0fdf4', borderLeft: '3px solid #22c55e', padding: '10px 14px' }}>
+              <div style={{ fontSize: 10, color: '#15803d', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 4 }}>Recommendation</div>
+              <p style={{ fontSize: 12, color: '#4a4568', lineHeight: 1.6 }}>{strategy.recommendationReason}</p>
+            </div>
+          )}
+        </div>
+
+        {/* Channels */}
+        {strategy.channels?.length > 0 && (
+          <div style={{ marginBottom: 14 }}>
+            <div style={{ fontSize: 10, color: '#8b87a8', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>Channels</div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+              {strategy.channels.map(ch => (
+                <span key={ch} style={{ padding: '4px 12px', fontSize: 11, fontWeight: 600, background: colors.tag, color: colors.tagText, border: `1px solid ${colors.border}20` }}>{ch}</span>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Pros / Cons */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, paddingTop: 14, borderTop: '1px solid #f3f2ff' }}>
+          <div>
+            <div style={{ fontSize: 10, color: '#16a34a', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>Strengths</div>
+            {strategy.pros?.slice(0, 3).map((p, i) => (
+              <div key={i} style={{ display: 'flex', gap: 8, marginBottom: 6 }}>
+                <span style={{ color: '#22c55e', fontSize: 12, flexShrink: 0, marginTop: 1 }}>+</span>
+                <p style={{ fontSize: 12, color: '#4a4568', lineHeight: 1.5 }}>{p}</p>
+              </div>
+            ))}
+          </div>
+          <div>
+            <div style={{ fontSize: 10, color: '#dc2626', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>Considerations</div>
+            {strategy.cons?.slice(0, 3).map((c, i) => (
+              <div key={i} style={{ display: 'flex', gap: 8, marginBottom: 6 }}>
+                <span style={{ color: '#f87171', fontSize: 12, flexShrink: 0, marginTop: 1 }}>–</span>
+                <p style={{ fontSize: 12, color: '#4a4568', lineHeight: 1.5 }}>{c}</p>
+              </div>
             ))}
           </div>
         </div>
-      )}
-
-      {/* Pros and cons */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 16 }}>
-        <div>
-          <p style={{ fontSize: 11, color: '#43e97b', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 6 }}>✓ Pros</p>
-          {strategy.pros?.slice(0, 3).map((p, i) => <p key={i} style={{ fontSize: 12, color: 'var(--text-2)', marginBottom: 4, paddingLeft: 8, borderLeft: '2px solid rgba(67,233,123,0.3)' }}>{p}</p>)}
-        </div>
-        <div>
-          <p style={{ fontSize: 11, color: '#ff91a8', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 6 }}>✗ Cons</p>
-          {strategy.cons?.slice(0, 2).map((c, i) => <p key={i} style={{ fontSize: 12, color: 'var(--text-2)', marginBottom: 4, paddingLeft: 8, borderLeft: '2px solid rgba(255,101,132,0.3)' }}>{c}</p>)}
-        </div>
       </div>
 
-      {/* Select indicator */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <span style={{ fontSize: 12, color: 'var(--text-3)' }}>{strategy.bestFor}</span>
-        {isSelected ? (
-          <span style={{ display: 'flex', alignItems: 'center', gap: 6, color: colors.text, fontSize: 13, fontWeight: 700 }}>
-            <CheckCircle size={16} /> Selected
-          </span>
-        ) : (
-          <span style={{ fontSize: 12, color: 'var(--text-3)' }}>Click to select →</span>
-        )}
+      {/* Footer */}
+      <div style={{ padding: '12px 24px', background: '#fafafa', borderTop: '1px solid #f3f2ff', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <span style={{ fontSize: 12, color: '#8b87a8', fontStyle: 'italic' }}>{strategy.bestFor}</span>
+        <span style={{ fontSize: 12, color: isSelected ? colors.tagText : '#8b87a8', fontWeight: 600 }}>
+          {isSelected ? 'Selected' : 'Click to select →'}
+        </span>
       </div>
     </div>
   );
@@ -164,74 +165,92 @@ export default function StrategiesSection({ strategies, selectedStrategy, onSele
   const recommended = strategies.filter(s => s.isRecommended);
 
   return (
-    <div style={{ maxWidth: 1000, margin: '0 auto', animation: 'fadeIn 0.4s ease' }}>
-      {/* Header */}
-      <div style={{ marginBottom: 32 }}>
-        <span className="badge badge-purple" style={{ marginBottom: 10, display: 'inline-flex' }}>Step 2 of 5</span>
-        <h1 style={{ fontFamily: 'Bricolage Grotesque', fontSize: 38, fontWeight: 800, letterSpacing: '-0.03em', marginBottom: 10 }}>
-          Your <span style={{ color: 'var(--accent)' }}>5 personalized</span> strategies
+    <div style={{ maxWidth: 860, margin: '0 auto', animation: 'fadeIn 0.4s ease' }}>
+
+      {/* Header — centered */}
+      <div style={{ textAlign: 'center', marginBottom: 40, paddingTop: 8 }}>
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, marginBottom: 20 }}>
+          <div style={{ height: 1, width: 32, background: '#6c63ff' }} />
+          <span style={{ fontSize: 11, color: '#6c63ff', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em' }}>Step 2 of 5</span>
+          <div style={{ height: 1, width: 32, background: '#6c63ff' }} />
+        </div>
+        <h1 style={{ fontFamily: 'Bricolage Grotesque', fontSize: 38, fontWeight: 800, letterSpacing: '-0.03em', marginBottom: 12, color: '#1a1730', lineHeight: 1.1 }}>
+          Your <span style={{ color: '#6c63ff' }}>5 personalized</span> strategies
         </h1>
-        <p style={{ color: 'var(--text-2)', fontSize: 16, maxWidth: 640 }}>
-          Our AI analyzed your profile and generated these strategies specifically for your company. Read each one carefully, then pick the one that excites you most.
+        <p style={{ color: '#4a4568', fontSize: 16, lineHeight: 1.7, maxWidth: 520, margin: '0 auto' }}>
+          We analyzed your profile and generated these strategies for your company. Read each one, then pick the one that excites you most.
         </p>
       </div>
 
-      {/* Top picks callout */}
+      {/* Recommendations callout */}
       {recommended.length > 0 && (
-        <div style={{ background: 'rgba(67,233,123,0.08)', border: '1px solid rgba(67,233,123,0.3)', borderRadius: 16, padding: '16px 20px', marginBottom: 28, display: 'flex', alignItems: 'center', gap: 12 }}>
-          <span style={{ fontSize: 24 }}>⭐</span>
+        <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', padding: '14px 20px', marginBottom: 28, display: 'flex', alignItems: 'center', gap: 14 }}>
+          <div style={{ width: 8, height: 8, background: '#22c55e', flexShrink: 0 }} />
           <div>
-            <p style={{ fontFamily: 'Bricolage Grotesque', fontWeight: 700, fontSize: 15, color: '#43e97b', marginBottom: 2 }}>
-              AI Top Picks for You
-            </p>
-            <p style={{ fontSize: 13, color: 'var(--text-2)' }}>
-              Based on your profile, <strong style={{ color: 'var(--text)' }}>{recommended.map(r => r.name).join(' and ')}</strong> are the best fit for your goals and budget.
-            </p>
+            <span style={{ fontFamily: 'Bricolage Grotesque', fontWeight: 700, fontSize: 13, color: '#15803d' }}>Recommendations for you — </span>
+            <span style={{ fontSize: 13, color: '#4a4568' }}>
+              Based on your profile, <strong style={{ color: '#1a1730' }}>{recommended.map(r => r.name).join(' and ')}</strong> are the best fit for your goals and budget.
+            </span>
           </div>
         </div>
       )}
 
       {/* Strategy cards */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginBottom: 32 }}>
-        {strategies.map(strategy => (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 32 }}>
+        {strategies.map((strategy, i) => (
           <StrategyCard
             key={strategy.id}
             strategy={strategy}
+            index={i}
             isSelected={selectedStrategy?.id === strategy.id}
             onSelect={() => onSelect(strategy)}
           />
         ))}
       </div>
 
-      {/* CTA */}
+      {/* Sticky footer CTA */}
       <div style={{
-        background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 20,
-        padding: '28px 32px', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        position: 'sticky', bottom: 24,
-        boxShadow: '0 -8px 40px rgba(0,0,0,0.4)',
+        background: 'white',
+        border: '1px solid #e4e2f5',
+        padding: '20px 28px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        position: 'sticky',
+        bottom: 16,
+        boxShadow: '0 -4px 24px rgba(0,0,0,0.08)',
       }}>
         <div>
           {selectedStrategy ? (
             <>
-              <p style={{ fontFamily: 'Bricolage Grotesque', fontSize: 18, fontWeight: 700, marginBottom: 2 }}>
-                ✅ <span style={{ color: 'var(--accent)' }}>{selectedStrategy.name}</span> selected
+              <p style={{ fontFamily: 'Bricolage Grotesque', fontSize: 16, fontWeight: 700, marginBottom: 2, color: '#1a1730' }}>
+                <span style={{ color: '#22c55e' }}>✓</span> {selectedStrategy.name} selected
               </p>
-              <p style={{ color: 'var(--text-3)', fontSize: 13 }}>Ready to build your detailed marketing plan</p>
+              <p style={{ color: '#8b87a8', fontSize: 12 }}>Ready to build your detailed marketing plan</p>
             </>
           ) : (
             <>
-              <p style={{ fontFamily: 'Bricolage Grotesque', fontSize: 18, fontWeight: 700, marginBottom: 2 }}>Select a strategy to continue</p>
-              <p style={{ color: 'var(--text-3)', fontSize: 13 }}>Click any strategy above to select it</p>
+              <p style={{ fontFamily: 'Bricolage Grotesque', fontSize: 16, fontWeight: 700, marginBottom: 2, color: '#1a1730' }}>Select a strategy to continue</p>
+              <p style={{ color: '#8b87a8', fontSize: 12 }}>Click any card above to select it</p>
             </>
           )}
         </div>
         <button
-          className="btn-primary"
           onClick={onContinue}
           disabled={!selectedStrategy}
-          style={{ padding: '14px 32px', fontSize: 15 }}
+          style={{
+            background: selectedStrategy ? '#6c63ff' : '#d4d0f0',
+            color: 'white', border: 'none',
+            padding: '13px 28px',
+            fontFamily: 'Bricolage Grotesque', fontWeight: 700, fontSize: 14,
+            cursor: selectedStrategy ? 'pointer' : 'not-allowed',
+            display: 'flex', alignItems: 'center', gap: 8,
+            transition: 'background 0.2s',
+          }}
+          onMouseEnter={e => { if (selectedStrategy) (e.currentTarget as HTMLElement).style.background = '#5a52e0'; }}
+          onMouseLeave={e => { if (selectedStrategy) (e.currentTarget as HTMLElement).style.background = '#6c63ff'; }}
         >
-          Build My Plan <ChevronRight size={18} />
+          Build My Plan <ChevronRight size={16} />
         </button>
       </div>
     </div>
