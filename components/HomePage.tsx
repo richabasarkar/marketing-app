@@ -22,6 +22,8 @@ const PROCESS = [
   { step: 'Step 03', title: 'Execute Your Plan', description: 'Get a complete 12-week roadmap with tasks, KPIs, and budget guidance — ready to act on immediately.' },
 ];
 
+const TICKER_ITEMS = ['AI Marketing Strategy', '12-Week Roadmap', 'KPI Tracking', 'Budget Planning', 'Action Board', 'Brand Messaging', 'Competitor Analysis', 'Lead Generation'];
+
 export default function HomePage({ onGetStarted }: Props) {
   const [scrolled, setScrolled] = useState(false);
   const [hoveredFeature, setHoveredFeature] = useState<number | null>(null);
@@ -35,22 +37,44 @@ export default function HomePage({ onGetStarted }: Props) {
   return (
     <div style={{ minHeight: '100vh', background: '#ffffff', fontFamily: 'DM Sans, sans-serif', color: '#1a1730' }}>
 
+      <style>{`
+        @keyframes ticker {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        .ticker-track {
+          display: flex;
+          width: max-content;
+          animation: ticker 22s linear infinite;
+        }
+        .ticker-track:hover {
+          animation-play-state: paused;
+        }
+        @keyframes fadeUp {
+          from { opacity: 0; transform: translateY(16px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-up { animation: fadeUp 0.6s ease forwards; }
+        .fade-up-2 { animation: fadeUp 0.6s 0.15s ease forwards; opacity: 0; }
+        .fade-up-3 { animation: fadeUp 0.6s 0.3s ease forwards; opacity: 0; }
+      `}</style>
+
       {/* Nav */}
       <nav style={{
         position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100,
-        padding: '0 48px', height: 60,
-        background: scrolled ? 'rgba(255,255,255,0.96)' : 'transparent',
+        padding: '0 56px', height: 58,
+        background: scrolled ? 'rgba(255,255,255,0.97)' : 'transparent',
         borderBottom: scrolled ? '1px solid #e4e2f5' : '1px solid transparent',
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        transition: 'all 0.4s',
-        backdropFilter: scrolled ? 'blur(12px)' : 'none',
+        transition: 'all 0.35s',
+        backdropFilter: scrolled ? 'blur(16px)' : 'none',
       }}>
-        <span style={{ fontFamily: 'Bricolage Grotesque', fontWeight: 800, fontSize: 17, letterSpacing: '-0.03em', color: '#1a1730' }}>
+        <span style={{ fontFamily: 'Bricolage Grotesque', fontWeight: 800, fontSize: 16, letterSpacing: '-0.03em', color: '#1a1730' }}>
           Strategy<span style={{ color: '#6c63ff' }}>OS</span>
         </span>
         <button
           onClick={onGetStarted}
-          style={{ background: '#6c63ff', color: 'white', border: 'none', padding: '9px 22px', fontFamily: 'Bricolage Grotesque', fontWeight: 600, fontSize: 13, cursor: 'pointer', letterSpacing: '0.01em', transition: 'background 0.2s' }}
+          style={{ background: '#6c63ff', color: 'white', border: 'none', padding: '8px 20px', fontFamily: 'Bricolage Grotesque', fontWeight: 600, fontSize: 13, cursor: 'pointer', letterSpacing: '0.01em', transition: 'background 0.2s' }}
           onMouseEnter={e => (e.currentTarget.style.background = '#5a52e0')}
           onMouseLeave={e => (e.currentTarget.style.background = '#6c63ff')}
         >
@@ -58,154 +82,178 @@ export default function HomePage({ onGetStarted }: Props) {
         </button>
       </nav>
 
-      {/* Hero — asymmetric, editorial */}
+      {/* HERO */}
       <section style={{
         minHeight: '100vh',
-        padding: '0 48px',
         display: 'grid',
-        gridTemplateColumns: '1fr 1fr',
-        alignItems: 'center',
-        gap: 0,
+        gridTemplateColumns: '5fr 4fr',
         borderBottom: '1px solid #e4e2f5',
         background: '#f8f7ff',
       }}>
-        {/* Left */}
-        <div style={{ paddingTop: 120, paddingBottom: 80, paddingRight: 64 }}>
-          <div style={{ display: 'inline-block', background: '#6c63ff', color: 'white', padding: '5px 12px', fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 32 }}>
+        {/* Left — copy */}
+        <div style={{
+          padding: '140px 64px 80px 56px',
+          display: 'flex', flexDirection: 'column', justifyContent: 'center',
+          borderRight: '1px solid #e4e2f5',
+        }}>
+          <div className="fade-up" style={{ display: 'inline-block', background: '#6c63ff', color: 'white', padding: '4px 11px', fontSize: 10, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 28, alignSelf: 'flex-start' }}>
             AI Marketing Platform
           </div>
-          <h1 style={{
+
+          <h1 className="fade-up-2" style={{
             fontFamily: 'Bricolage Grotesque', fontWeight: 800,
-            fontSize: 'clamp(48px, 5.5vw, 80px)',
-            lineHeight: 1.0, letterSpacing: '-0.04em',
-            color: '#1a1730', marginBottom: 28,
+            fontSize: 'clamp(38px, 4.2vw, 62px)',
+            lineHeight: 1.05, letterSpacing: '-0.035em',
+            color: '#1a1730', marginBottom: 22,
           }}>
-            Your full marketing strategy.<br />
+            Your full marketing<br />
+            strategy.<br />
             <span style={{ color: '#6c63ff' }}>Built in minutes.</span>
           </h1>
-          <p style={{ fontSize: 18, color: '#4a4568', lineHeight: 1.7, maxWidth: 440, marginBottom: 40 }}>
-            Answer questions about your business and get a personalized 12-week marketing plan — with strategies, KPIs, budgets, and a week-by-week action board.
+
+          <p className="fade-up-3" style={{ fontSize: 16, color: '#4a4568', lineHeight: 1.75, maxWidth: 400, marginBottom: 36 }}>
+            Answer a few questions about your business and get a personalized 12-week marketing plan — with strategies, KPIs, budgets, and a week-by-week action board.
           </p>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
+
+          <div className="fade-up-3" style={{ display: 'flex', alignItems: 'center', gap: 20, marginBottom: 56 }}>
             <button
               onClick={onGetStarted}
-              style={{ background: '#1a1730', color: 'white', border: 'none', padding: '15px 36px', fontFamily: 'Bricolage Grotesque', fontWeight: 700, fontSize: 15, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 10, transition: 'all 0.2s' }}
+              style={{ background: '#1a1730', color: 'white', border: 'none', padding: '13px 30px', fontFamily: 'Bricolage Grotesque', fontWeight: 700, fontSize: 14, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 9, transition: 'all 0.2s' }}
               onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = '#6c63ff'; }}
               onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = '#1a1730'; }}
             >
-              Build My Strategy <ArrowRight size={16} />
+              Build My Strategy <ArrowRight size={15} />
             </button>
-            <span style={{ fontSize: 13, color: '#8b87a8' }}>Free · No signup required</span>
+            <span style={{ fontSize: 12, color: '#8b87a8', letterSpacing: '0.01em' }}>Free · No signup required</span>
           </div>
 
-          {/* Trust row */}
-          <div style={{ marginTop: 64, display: 'flex', gap: 40 }}>
-            {[['12', 'week plan'], ['40+', 'data points'], ['5', 'strategies']].map(([val, label]) => (
-              <div key={label}>
-                <div style={{ fontFamily: 'Bricolage Grotesque', fontWeight: 800, fontSize: 32, color: '#6c63ff', lineHeight: 1 }}>{val}</div>
-                <div style={{ fontSize: 12, color: '#8b87a8', marginTop: 3, textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 600 }}>{label}</div>
+          {/* Stats row */}
+          <div style={{ display: 'flex', gap: 0, borderTop: '1px solid #e4e2f5', paddingTop: 32 }}>
+            {[['12', 'week plan'], ['40+', 'data points'], ['5', 'strategies'], ['100+', 'tasks']].map(([val, label], i) => (
+              <div key={label} style={{ paddingRight: 32, marginRight: 32, borderRight: i < 3 ? '1px solid #e4e2f5' : 'none' }}>
+                <div style={{ fontFamily: 'Bricolage Grotesque', fontWeight: 800, fontSize: 28, color: '#6c63ff', lineHeight: 1 }}>{val}</div>
+                <div style={{ fontSize: 11, color: '#8b87a8', marginTop: 4, textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 600 }}>{label}</div>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Right — mock UI panel */}
-        <div style={{ paddingTop: 120, paddingBottom: 80, paddingLeft: 48, borderLeft: '1px solid #e4e2f5', height: '100%', display: 'flex', alignItems: 'center' }}>
-          <div style={{ width: '100%', background: 'white', border: '1px solid #e4e2f5' }}>
+        {/* Right — mock UI */}
+        <div style={{ padding: '140px 56px 80px 48px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ width: '100%', maxWidth: 420, background: 'white', border: '1px solid #e4e2f5', boxShadow: '0 8px 40px rgba(108,99,255,0.10), 0 2px 12px rgba(0,0,0,0.05)' }}>
             {/* Mock header */}
-            <div style={{ padding: '16px 20px', borderBottom: '1px solid #e4e2f5', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <span style={{ fontFamily: 'Bricolage Grotesque', fontWeight: 700, fontSize: 13, color: '#1a1730' }}>Your Marketing Plan</span>
-              <span style={{ fontSize: 11, color: '#8b87a8', background: '#f3f2ff', padding: '3px 8px' }}>Week 3 of 12</span>
+            <div style={{ padding: '14px 18px', borderBottom: '1px solid #e4e2f5', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#fafafa' }}>
+              <div style={{ display: 'flex', gap: 6 }}>
+                {['#ff5f57','#ffbd2e','#28ca42'].map(c => <div key={c} style={{ width: 10, height: 10, borderRadius: '50%', background: c }} />)}
+              </div>
+              <span style={{ fontFamily: 'Bricolage Grotesque', fontWeight: 700, fontSize: 12, color: '#4a4568' }}>Your Marketing Plan</span>
+              <span style={{ fontSize: 10, color: '#8b87a8', background: '#f3f2ff', padding: '2px 8px' }}>Week 3 of 12</span>
             </div>
-            {/* Mock stats */}
+
+            {/* Stats */}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', borderBottom: '1px solid #e4e2f5' }}>
-              {[['Strategy', 'Content-Led Growth', '#6c63ff'], ['ROI Est.', '4–6x return', '#22c55e'], ['Budget', '$2,000/mo', '#1a1730']].map(([label, val, color]) => (
-                <div key={label} style={{ padding: '16px 20px', borderRight: '1px solid #e4e2f5' }}>
-                  <div style={{ fontSize: 10, color: '#8b87a8', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 4 }}>{label}</div>
-                  <div style={{ fontFamily: 'Bricolage Grotesque', fontWeight: 700, fontSize: 13, color }}>{val}</div>
+              {[['Strategy', 'Content-Led', '#6c63ff'], ['ROI Est.', '4–6x return', '#22c55e'], ['Budget', '$2,000/mo', '#1a1730']].map(([label, val, color], i) => (
+                <div key={label} style={{ padding: '14px 16px', borderRight: i < 2 ? '1px solid #e4e2f5' : 'none' }}>
+                  <div style={{ fontSize: 9, color: '#8b87a8', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 4 }}>{label}</div>
+                  <div style={{ fontFamily: 'Bricolage Grotesque', fontWeight: 700, fontSize: 12, color }}>{val}</div>
                 </div>
               ))}
             </div>
-            {/* Mock progress */}
-            <div style={{ padding: '16px 20px', borderBottom: '1px solid #e4e2f5' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
+
+            {/* Progress */}
+            <div style={{ padding: '14px 18px', borderBottom: '1px solid #e4e2f5' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 7 }}>
                 <span style={{ fontSize: 11, color: '#4a4568', fontWeight: 600 }}>Overall Progress</span>
                 <span style={{ fontSize: 11, color: '#6c63ff', fontWeight: 700 }}>24%</span>
               </div>
-              <div style={{ height: 4, background: '#f3f2ff' }}>
+              <div style={{ height: 3, background: '#f3f2ff' }}>
                 <div style={{ height: '100%', width: '24%', background: '#6c63ff' }} />
               </div>
             </div>
-            {/* Mock tasks */}
+
+            {/* Phase label */}
+            <div style={{ padding: '10px 18px', borderBottom: '1px solid #e4e2f5', background: '#f8f7ff' }}>
+              <span style={{ fontSize: 10, color: '#6c63ff', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em' }}>Phase 1 — Foundation</span>
+            </div>
+
+            {/* Tasks */}
             {[
               { week: 'W1', task: 'Set up Google Analytics & tracking', done: true },
               { week: 'W2', task: 'Write 3 pillar blog posts', done: true },
               { week: 'W3', task: 'Launch email welcome sequence', done: false },
               { week: 'W4', task: 'Start LinkedIn content calendar', done: false },
+              { week: 'W5', task: 'Run first paid ad experiment', done: false },
             ].map((item, i) => (
-              <div key={i} style={{ padding: '12px 20px', borderBottom: '1px solid #f3f2ff', display: 'flex', alignItems: 'center', gap: 12 }}>
-                <div style={{ width: 16, height: 16, border: item.done ? 'none' : '1.5px solid #ccc9f0', background: item.done ? '#22c55e' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  {item.done && <span style={{ color: 'white', fontSize: 10, fontWeight: 900 }}>✓</span>}
+              <div key={i} style={{ padding: '11px 18px', borderBottom: '1px solid #f3f2ff', display: 'flex', alignItems: 'center', gap: 10, background: i === 2 ? '#fafbff' : 'white' }}>
+                <div style={{ width: 14, height: 14, border: item.done ? 'none' : '1.5px solid #ccc9f0', background: item.done ? '#22c55e' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  {item.done && <span style={{ color: 'white', fontSize: 9, fontWeight: 900 }}>✓</span>}
                 </div>
-                <span style={{ fontSize: 11, color: '#8b87a8', fontWeight: 700, width: 20, flexShrink: 0 }}>{item.week}</span>
-                <span style={{ fontSize: 12, color: item.done ? '#8b87a8' : '#1a1730', textDecoration: item.done ? 'line-through' : 'none', fontWeight: item.done ? 400 : 500 }}>{item.task}</span>
+                <span style={{ fontSize: 10, color: '#8b87a8', fontWeight: 700, width: 18, flexShrink: 0 }}>{item.week}</span>
+                <span style={{ fontSize: 11, color: item.done ? '#8b87a8' : '#1a1730', textDecoration: item.done ? 'line-through' : 'none', fontWeight: item.done ? 400 : 500, flex: 1 }}>{item.task}</span>
+                {i === 2 && <span style={{ fontSize: 9, color: '#6c63ff', background: '#ede9ff', padding: '2px 6px', fontWeight: 700 }}>NOW</span>}
               </div>
             ))}
-            <div style={{ padding: '12px 20px' }}>
+
+            <div style={{ padding: '12px 18px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <span style={{ fontSize: 11, color: '#6c63ff', fontWeight: 600, cursor: 'pointer' }}>View all 47 tasks →</span>
+              <span style={{ fontSize: 10, color: '#8b87a8' }}>2 of 5 done</span>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Marquee strip */}
-      <div style={{ background: '#6c63ff', padding: '14px 0', overflow: 'hidden', whiteSpace: 'nowrap' }}>
-        {[...Array(3)].map((_, i) => (
-          <span key={i} style={{ display: 'inline-block', paddingRight: 48, fontSize: 12, color: 'rgba(255,255,255,0.8)', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
-            AI Marketing Strategy &nbsp;&nbsp;·&nbsp;&nbsp; 12-Week Roadmap &nbsp;&nbsp;·&nbsp;&nbsp; KPI Tracking &nbsp;&nbsp;·&nbsp;&nbsp; Budget Planning &nbsp;&nbsp;·&nbsp;&nbsp; Action Board &nbsp;&nbsp;·&nbsp;&nbsp; Brand Messaging &nbsp;&nbsp;·&nbsp;&nbsp;
-          </span>
-        ))}
+      {/* ANIMATED TICKER */}
+      <div style={{ background: '#6c63ff', padding: '13px 0', overflow: 'hidden' }}>
+        <div className="ticker-track">
+          {[...TICKER_ITEMS, ...TICKER_ITEMS, ...TICKER_ITEMS, ...TICKER_ITEMS].map((item, i) => (
+            <span key={i} style={{ display: 'inline-flex', alignItems: 'center', fontSize: 11, color: 'rgba(255,255,255,0.85)', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', whiteSpace: 'nowrap' }}>
+              {item}
+              <span style={{ display: 'inline-block', width: 4, height: 4, background: 'rgba(255,255,255,0.4)', margin: '0 28px', flexShrink: 0 }} />
+            </span>
+          ))}
+        </div>
       </div>
 
-      {/* Process — horizontal numbered */}
-      <section style={{ padding: '96px 48px', background: 'white', borderBottom: '1px solid #e4e2f5' }}>
+      {/* HOW IT WORKS */}
+      <section style={{ padding: '96px 56px', background: 'white', borderBottom: '1px solid #e4e2f5' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto' }}>
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: 16, marginBottom: 64 }}>
-            <h2 style={{ fontFamily: 'Bricolage Grotesque', fontWeight: 800, fontSize: 42, letterSpacing: '-0.03em', lineHeight: 1 }}>How it works</h2>
-            <div style={{ flex: 1, height: 1, background: '#e4e2f5', marginBottom: 8 }} />
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: 20, marginBottom: 72 }}>
+            <h2 style={{ fontFamily: 'Bricolage Grotesque', fontWeight: 800, fontSize: 38, letterSpacing: '-0.03em', lineHeight: 1, whiteSpace: 'nowrap' }}>How it works</h2>
+            <div style={{ flex: 1, height: 1, background: '#e4e2f5' }} />
+            <span style={{ fontSize: 12, color: '#8b87a8', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', whiteSpace: 'nowrap' }}>3 simple steps</span>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 0 }}>
             {PROCESS.map((item, i) => (
-              <div key={i} style={{ padding: '40px 40px 40px 0', borderRight: i < 2 ? '1px solid #e4e2f5' : 'none', paddingLeft: i > 0 ? 40 : 0 }}>
-                <div style={{ fontFamily: 'Bricolage Grotesque', fontWeight: 800, fontSize: 52, color: '#e4e2f5', lineHeight: 1, marginBottom: 20 }}>{item.step.split(' ')[1]}</div>
-                <div style={{ fontSize: 11, color: '#6c63ff', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 12 }}>{item.step}</div>
-                <h3 style={{ fontFamily: 'Bricolage Grotesque', fontWeight: 700, fontSize: 22, marginBottom: 12, lineHeight: 1.2 }}>{item.title}</h3>
-                <p style={{ fontSize: 14, color: '#4a4568', lineHeight: 1.7 }}>{item.description}</p>
+              <div key={i} style={{ paddingRight: i < 2 ? 48 : 0, paddingLeft: i > 0 ? 48 : 0, borderRight: i < 2 ? '1px solid #e4e2f5' : 'none' }}>
+                <div style={{ fontFamily: 'Bricolage Grotesque', fontWeight: 800, fontSize: 64, color: '#f0eeff', lineHeight: 1, marginBottom: 20, letterSpacing: '-0.04em' }}>{String(i + 1).padStart(2, '0')}</div>
+                <div style={{ fontSize: 10, color: '#6c63ff', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 10 }}>{item.step}</div>
+                <h3 style={{ fontFamily: 'Bricolage Grotesque', fontWeight: 700, fontSize: 20, marginBottom: 10, lineHeight: 1.2, color: '#1a1730' }}>{item.title}</h3>
+                <p style={{ fontSize: 14, color: '#4a4568', lineHeight: 1.75 }}>{item.description}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Features — editorial list */}
-      <section style={{ padding: '96px 48px', background: '#f8f7ff', borderBottom: '1px solid #e4e2f5' }}>
+      {/* FEATURES */}
+      <section style={{ padding: '96px 56px', background: '#f8f7ff', borderBottom: '1px solid #e4e2f5' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 80, alignItems: 'start' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 96, alignItems: 'start' }}>
             <div style={{ position: 'sticky', top: 100 }}>
-              <div style={{ fontSize: 11, color: '#6c63ff', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 16 }}>Everything included</div>
-              <h2 style={{ fontFamily: 'Bricolage Grotesque', fontWeight: 800, fontSize: 42, letterSpacing: '-0.03em', lineHeight: 1.1, marginBottom: 20 }}>
-                A complete marketing operating system
+              <div style={{ fontSize: 10, color: '#6c63ff', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 16 }}>Everything included</div>
+              <h2 style={{ fontFamily: 'Bricolage Grotesque', fontWeight: 800, fontSize: 36, letterSpacing: '-0.03em', lineHeight: 1.1, marginBottom: 16, color: '#1a1730' }}>
+                A complete marketing<br />operating system
               </h2>
-              <p style={{ fontSize: 15, color: '#4a4568', lineHeight: 1.7, marginBottom: 32 }}>
+              <p style={{ fontSize: 14, color: '#4a4568', lineHeight: 1.75, marginBottom: 32 }}>
                 Everything you need to plan, execute, and measure your marketing — in one place. No agency required.
               </p>
               <button
                 onClick={onGetStarted}
-                style={{ background: '#6c63ff', color: 'white', border: 'none', padding: '13px 28px', fontFamily: 'Bricolage Grotesque', fontWeight: 700, fontSize: 14, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, transition: 'background 0.2s' }}
+                style={{ background: '#6c63ff', color: 'white', border: 'none', padding: '12px 24px', fontFamily: 'Bricolage Grotesque', fontWeight: 700, fontSize: 13, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, transition: 'background 0.2s' }}
                 onMouseEnter={e => (e.currentTarget.style.background = '#5a52e0')}
                 onMouseLeave={e => (e.currentTarget.style.background = '#6c63ff')}
               >
-                Start for free <ArrowRight size={15} />
+                Start for free <ArrowRight size={14} />
               </button>
             </div>
 
@@ -216,22 +264,20 @@ export default function HomePage({ onGetStarted }: Props) {
                   onMouseEnter={() => setHoveredFeature(i)}
                   onMouseLeave={() => setHoveredFeature(null)}
                   style={{
-                    padding: '28px 0',
+                    padding: '26px 0',
                     borderBottom: '1px solid #e4e2f5',
                     display: 'grid',
-                    gridTemplateColumns: '48px 1fr',
-                    gap: 24,
-                    cursor: 'default',
+                    gridTemplateColumns: '44px 1fr',
+                    gap: 20,
                     transition: 'all 0.2s',
-                    background: hoveredFeature === i ? 'rgba(108,99,255,0.03)' : 'transparent',
-                    marginLeft: hoveredFeature === i ? -16 : 0,
-                    paddingLeft: hoveredFeature === i ? 16 : 0,
+                    paddingLeft: hoveredFeature === i ? 14 : 0,
+                    background: hoveredFeature === i ? 'rgba(108,99,255,0.02)' : 'transparent',
                   }}
                 >
-                  <span style={{ fontFamily: 'Bricolage Grotesque', fontWeight: 800, fontSize: 13, color: hoveredFeature === i ? '#6c63ff' : '#ccc9f0', paddingTop: 3, transition: 'color 0.2s' }}>{feature.number}</span>
+                  <span style={{ fontFamily: 'Bricolage Grotesque', fontWeight: 800, fontSize: 12, color: hoveredFeature === i ? '#6c63ff' : '#d4d0f0', paddingTop: 2, transition: 'color 0.2s', letterSpacing: '0.02em' }}>{feature.number}</span>
                   <div>
-                    <h3 style={{ fontFamily: 'Bricolage Grotesque', fontWeight: 700, fontSize: 18, marginBottom: 6, color: '#1a1730' }}>{feature.title}</h3>
-                    <p style={{ fontSize: 14, color: '#4a4568', lineHeight: 1.65 }}>{feature.description}</p>
+                    <h3 style={{ fontFamily: 'Bricolage Grotesque', fontWeight: 700, fontSize: 17, marginBottom: 5, color: '#1a1730' }}>{feature.title}</h3>
+                    <p style={{ fontSize: 13, color: '#4a4568', lineHeight: 1.7 }}>{feature.description}</p>
                   </div>
                 </div>
               ))}
@@ -240,50 +286,44 @@ export default function HomePage({ onGetStarted }: Props) {
         </div>
       </section>
 
-      {/* Split CTA */}
-      <section style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', minHeight: 400 }}>
-        <div style={{ background: '#1a1730', padding: '80px 64px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+      {/* SPLIT CTA */}
+      <section style={{ display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
+        <div style={{ background: '#1a1730', padding: '80px 64px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: 440 }}>
           <div>
-            <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 24 }}>Get started today</div>
-            <h2 style={{ fontFamily: 'Bricolage Grotesque', fontWeight: 800, fontSize: 42, color: 'white', letterSpacing: '-0.03em', lineHeight: 1.1, marginBottom: 20 }}>
-              Ready to grow your business?
+            <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.35)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.14em', marginBottom: 24 }}>Get started today</div>
+            <h2 style={{ fontFamily: 'Bricolage Grotesque', fontWeight: 800, fontSize: 40, color: 'white', letterSpacing: '-0.03em', lineHeight: 1.1, marginBottom: 18 }}>
+              Ready to grow<br />your business?
             </h2>
-            <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: 16, lineHeight: 1.7, maxWidth: 380 }}>
+            <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: 15, lineHeight: 1.75, maxWidth: 340 }}>
               Build your complete AI marketing strategy in under 5 minutes. No marketing experience required.
             </p>
           </div>
           <button
             onClick={onGetStarted}
-            style={{ background: '#6c63ff', color: 'white', border: 'none', padding: '15px 32px', fontFamily: 'Bricolage Grotesque', fontWeight: 700, fontSize: 15, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 10, alignSelf: 'flex-start', marginTop: 40, transition: 'background 0.2s' }}
+            style={{ background: '#6c63ff', color: 'white', border: 'none', padding: '14px 28px', fontFamily: 'Bricolage Grotesque', fontWeight: 700, fontSize: 14, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 9, alignSelf: 'flex-start', transition: 'background 0.2s' }}
             onMouseEnter={e => (e.currentTarget.style.background = '#5a52e0')}
             onMouseLeave={e => (e.currentTarget.style.background = '#6c63ff')}
           >
-            Build My Strategy <ArrowRight size={16} />
+            Build My Strategy <ArrowRight size={15} />
           </button>
         </div>
+
         <div style={{ background: '#6c63ff', padding: '80px 64px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-          {[
-            'Personalized to your exact budget',
-            'No marketing expertise needed',
-            'Week-by-week task breakdown',
-            'Built-in KPI tracking',
-            'AI strategist available 24/7',
-            'Free — no signup required',
-          ].map((item, i) => (
-            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 16, paddingTop: 16, paddingBottom: 16, borderBottom: i < 5 ? '1px solid rgba(255,255,255,0.15)' : 'none' }}>
-              <div style={{ width: 6, height: 6, background: 'white', flexShrink: 0 }} />
-              <span style={{ color: 'white', fontSize: 15, fontWeight: 500 }}>{item}</span>
+          {['Personalized to your exact budget', 'No marketing expertise needed', 'Week-by-week task breakdown', 'Built-in KPI tracking', 'AI strategist available 24/7', 'Free — no signup required'].map((item, i, arr) => (
+            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 16, paddingTop: 18, paddingBottom: 18, borderBottom: i < arr.length - 1 ? '1px solid rgba(255,255,255,0.12)' : 'none' }}>
+              <div style={{ width: 5, height: 5, background: 'rgba(255,255,255,0.6)', flexShrink: 0 }} />
+              <span style={{ color: 'white', fontSize: 14, fontWeight: 500 }}>{item}</span>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Footer */}
-      <footer style={{ background: '#1a1730', borderTop: '1px solid rgba(255,255,255,0.08)', padding: '24px 48px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <span style={{ fontFamily: 'Bricolage Grotesque', fontWeight: 800, fontSize: 15, color: 'white', letterSpacing: '-0.02em' }}>
+      {/* FOOTER */}
+      <footer style={{ background: '#1a1730', borderTop: '1px solid rgba(255,255,255,0.06)', padding: '22px 56px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <span style={{ fontFamily: 'Bricolage Grotesque', fontWeight: 800, fontSize: 14, color: 'white', letterSpacing: '-0.02em' }}>
           Strategy<span style={{ color: '#6c63ff' }}>OS</span>
         </span>
-        <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: 12 }}>Built with AI · Your data stays private</p>
+        <p style={{ color: 'rgba(255,255,255,0.25)', fontSize: 12 }}>Built with AI · Your data stays private</p>
       </footer>
     </div>
   );
